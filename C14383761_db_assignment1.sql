@@ -273,4 +273,78 @@ INSERT INTO track(trackID, albumID, trackName) VALUES (11, 3333, 'Mother');
 INSERT INTO track(trackID, albumID, trackName) VALUES (12, 3333, 'Hiding');
 INSERT INTO track(trackID, albumID, trackName) VALUES (13, 3333, 'Make Up Your Mind');
 
+COMMIT;
+
+/*
+Two using an INNER JOIN on two tables.
+One using an INNER JOIN on three tables.
+A LEFT OUTER  or  RIGHT OUTER Join
+The use of a SINGLE ROW function
+The use of an AGGREGATE function
+Note: the single row function and aggregate function can be part of your queries using JOIN
+
+*/
+--using inner join on two tables
+SELECT album.albumName, track.trackName
+FROM album INNER JOIN track USING (albumID)
+WHERE trackID > 8
+ORDER BY albumID ASC;
+
+SELECT c.customerName, p.purchaseDate FROM customer c
+INNER JOIN purchase p
+ON c.customerID = p.customerID
+WHERE p.purchaseID = 1105;
+
+--join using three tables
+SELECT artistName, albumName, producerName FROM
+artist a
+INNER JOIN album l USING (artistID)
+INNER JOIN producer P using (producerID)
+WHERE producerName LIKE 'Rick Rubin';
+
+--using left outer join
+SELECT album.albumName, purchase.purchaseID FROM album 
+LEFT OUTER JOIN purchase 
+USING (albumID)
+ORDER BY albumName ASC;
+
+--single row function
+SELECT LOWER(albumName) FROM album;
+
+--aggregate function
+SELECT COUNT(albumName) from album;
+
+--update selected data
+UPDATE recordLabel
+SET labelDescription = 'This has changed'
+WHERE recordLabelId = 112;
+SELECT * FROM recordLabel;
+
+ALTER TABLE artist
+ADD artistSales NUMBER(9);
+SELECT * FROM artist;
+
+--using subquery to update artist table
+UPDATE artist 
+SET artistSales = (SELECT SUM(albumSales) FROM album WHERE artistID = 1)
+WHERE artistID = 1;
+SELECT * FROM artist;
+
+--Alter column
+ALTER TABLE track
+MODIFY trackName VARCHAR2(60);
+
+--drop column on table
+ALTER TABLE artist
+DROP COLUMN artistSales;
+SELECT * FROM artist;
+
+ALTER TABLE artist
+ADD CONSTRAINT artist_genre_chk CHECK (genre IN ('Alternative', 'Psychadelic', 'Pop'));
+
+ALTER TABLE artist
+DROP CONSTRAINT artist_genre_chk;
+
+ALTER TABLE artist
+ADD CONSTRAINT artist_genre_chk CHECK (genre IN ('Alternative', 'Psychadelic', 'Pop', 'Indie'));
 
